@@ -27,7 +27,7 @@
                 android:textSize="@dimen/textDescription"
                 android:textAlignment="center"
                 android:textColor="@android:color/darker_gray"/>
-
+o
         </ScrollView>
 
         <ImageView

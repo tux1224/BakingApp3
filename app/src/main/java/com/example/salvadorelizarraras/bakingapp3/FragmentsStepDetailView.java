@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.salvadorelizarraras.bakingapp3.Recipe.Steps;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -57,6 +59,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     private Steps mStep;
     private int mPosition;
     private Uri uriVieo;
+    private TextView mDescrition;
 
 
     @Override
@@ -95,13 +98,15 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
         left.setOnClickListener(this);
         right = (ImageView) view.findViewById(R.id.right);
         right.setOnClickListener(this);
+        mDescrition = (TextView) view.findViewById(R.id.tv_description);
+
 
         return view;
     }
 
     private void initializePlayer(Uri mediaUri) {
-
         if (mExoPlayer == null) {
+            mDescrition.setText(mStep.getDescription());
             // Create an instance of the ExoPlayer.
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveVideoTrackSelection.Factory(bandwidthMeter));
@@ -120,7 +125,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
                 mPlayerView.setUseController(true);
                 // Prepare the MediaSource.
                 mExoPlayer.seekTo(mPreviousPosition);
-                String userAgent = Util.getUserAgent(getContext(), "BakingApp3");
+                String userAgent = Util.getUserAgent(getContext(), getResources().getString(R.string.app_name));
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                         getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
                 mExoPlayer.prepare(mediaSource);
@@ -133,6 +138,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     private void releaseExoplayer(){
 
         if(mExoPlayer != null){
+            Log.d(TAG, "releaseExoplayer: != null");
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.stop();
             mPlayerView.setDefaultArtwork(null);
@@ -143,8 +149,8 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
 
     private void updateVisibility(){
 
-        if (!Utils.isTablet(getContext()) && getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            Log.d(TAG, mPosition + "updateData: " + mSteps.size());
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            Log.d(TAG, mPosition + " updateData: " + mSteps.size());
             left.setVisibility(View.VISIBLE);
             right.setVisibility(View.VISIBLE);
 
@@ -187,12 +193,12 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("steps", mSteps);
+        outState.putInt("position",mPosition);
 
         if (mExoPlayer!= null){
             Log.d(TAG, "onSaveInstanceState: " + mExoPlayer.getCurrentPosition());
             outState.putInt("sesion", (int) mExoPlayer.getCurrentPosition());
-            outState.putInt("position",mPosition);
-            outState.putParcelableArrayList("steps", mSteps);
             mPreviousPosition = (int) mExoPlayer.getCurrentPosition();
         }
     }
@@ -220,8 +226,10 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: "+mPreviousPosition);
-        updateVisibility();
-        initializePlayer(uriVieo);
+
+            updateVisibility();
+            initializePlayer(uriVieo);
+
 
 
     }
@@ -236,7 +244,6 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: ");
-
     }
 
     @Override
@@ -244,7 +251,6 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
         super.onStop();
         Log.d(TAG, "onStop: ");
         releaseExoplayer();
-
     }
 
     @Override

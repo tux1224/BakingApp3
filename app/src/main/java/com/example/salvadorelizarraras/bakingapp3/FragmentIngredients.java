@@ -39,16 +39,18 @@ public class FragmentIngredients extends Fragment implements AdapterIngredients.
 
     {
         View view = inflater.inflate(R.layout.ingredients_fragment, container, false);
-        ButterKnife.bind(this,view);
-        Bundle bundle = getArguments();
-        mData = bundle.getParcelableArrayList("ingredients");
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
-        mAdapter = new AdapterIngredients();
-        mAdapter.setListener(this);
-        mRecycler.setLayoutManager(layoutManager);
-        mRecycler.setHasFixedSize(true);
-        mRecycler.setAdapter(mAdapter);
+            ButterKnife.bind(this, view);
+            Bundle bundle = getArguments();
+            mData = bundle.getParcelableArrayList("ingredients");
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+            mAdapter = new AdapterIngredients();
+            mAdapter.setListener(this);
+            mRecycler.setLayoutManager(layoutManager);
+            mRecycler.setHasFixedSize(true);
+            mRecycler.setAdapter(mAdapter);
+
         return view;
     }
 

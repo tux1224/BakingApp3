@@ -2,6 +2,7 @@ package com.example.salvadorelizarraras.bakingapp3;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -28,6 +29,7 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
     @BindView(R.id.mRecycler_ingredients)
     RecyclerView mRecicler;
     private AdapterSteps mAdapter;
+    public static Fragment fragmentVideo;
 
 
     @Override
@@ -79,19 +81,38 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
 
         if (id == -1) {
             Fragment fragment;
-            fragment = new FragmentIngredients();
-            bundle.putParcelableArrayList("ingredients", mRecipe.getIngredients());
+            fragment = new FragmentIngredients();              bundle.putParcelableArrayList("ingredients", mRecipe.getIngredients());
             fragment.setArguments(bundle);
-            getFragmentManager().beginTransaction().replace(R.id.main_container, fragment, FragmentIngredients.TAG).addToBackStack(FragmentIngredients.TAG).commit();
+
+            if(!Utils.isTablet(getContext())) {
+                getFragmentManager().beginTransaction().replace(R.id.main_container, fragment, FragmentIngredients.TAG).addToBackStack(FragmentIngredients.TAG).commit();
+            }else {
+                    if(getFragmentManager().findFragmentByTag(FragmentsStepDetailView.TAG) != null ) {
+                        getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(FragmentsStepDetailView.TAG)).commit();
+                    }
+                getFragmentManager().beginTransaction().replace(R.id.main_container, fragment, FragmentIngredients.TAG).addToBackStack(FragmentIngredients.TAG).commit();
+            }
         } else {
             Fragment fragment = new FragmentsStepDetailView();
             bundle.putParcelableArrayList("steps", mRecipe.getSteps());
             bundle.putInt("position", id);
             fragment.setArguments(bundle);
+            if(!Utils.isTablet(getContext())){
+                
             getFragmentManager().beginTransaction().replace(R.id.main_container, fragment, FragmentsStepDetailView.TAG).addToBackStack(FragmentsStepDetailView.TAG).commit();
+            
+            }else{
+                Log.d(TAG, "open video in tablet");
+                fragmentVideo = fragment;
+                getFragmentManager().beginTransaction().replace(R.id.step_view_container, fragment, FragmentsStepDetailView.TAG).commit();
+
+
+            }
 
         }
     }
+
+
 
     //#regionlifecycle
     @Override
@@ -105,6 +126,7 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
         Log.d(TAG, "onResume: ");
         super.onResume();
 
+
     }
 
     @Override
@@ -116,6 +138,10 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
     @Override
     public void onStop() {
         super.onStop();
+        if(fragmentVideo != null){
+            fragmentVideo.onStop();
+
+        }
         Log.d(TAG, "onStop: ");
 
 
