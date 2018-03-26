@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.salvadorelizarraras.bakingapp3.Recipe.Ingredient;
 import com.example.salvadorelizarraras.bakingapp3.Recipe.Recipe;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.salvadorelizarraras.bakingapp3.Utils.isNetworkAvailable;
 
 
 /**
@@ -91,16 +94,19 @@ public class FragmentHome extends Fragment  implements LoaderManager.LoaderCallb
             LoaderManager loaderManager = getLoaderManager();
             Loader<String> searchLoader = loaderManager.getLoader(LOADER_CODE);
 
-            if (searchLoader == null) {
+            if (isNetworkAvailable(getContext())) {
+                if (searchLoader == null) {
 
-                loaderManager.initLoader(LOADER_CODE, bundle, this);
+                    loaderManager.initLoader(LOADER_CODE, bundle, this);
 
-            } else {
+                } else {
 
-                loaderManager.restartLoader(LOADER_CODE, bundle, this);
+                    loaderManager.restartLoader(LOADER_CODE, bundle, this);
 
+                }
+            }else{
+                Toast.makeText(getContext(), getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
             }
-
         return view;
 
     }
