@@ -59,9 +59,8 @@ public class ExampleInstrumentedTest {
     @After
     public void unregisterIdlingResource() {
 
-                        if (mIdlingResources != null) {
-                        IdlingRegistry.getInstance().unregister(mIdlingResources);
-                    }
+       if (mIdlingResources != null) {
+       IdlingRegistry.getInstance().unregister(mIdlingResources);
+       }
     }
-
 }
