@@ -1,5 +1,7 @@
 package com.example.salvadorelizarraras.bakingapp3;
 
+import android.app.ActionBar;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,12 +67,14 @@ public class FragmentHome extends Fragment  implements LoaderManager.LoaderCallb
         super.onCreate(savedInstanceState);
         getIdlingResource();
 
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
         // region recycler definition
@@ -115,6 +120,7 @@ public class FragmentHome extends Fragment  implements LoaderManager.LoaderCallb
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         Log.d(TAG, "onViewCreated: ");
         if (mIdlingResource != null) {
 
@@ -304,7 +310,10 @@ public class FragmentHome extends Fragment  implements LoaderManager.LoaderCallb
         super.onDetach();
         Log.d(TAG, "onDetach: ");
     }
+
+
     //#endregion
 
     //#endregion
+
 }

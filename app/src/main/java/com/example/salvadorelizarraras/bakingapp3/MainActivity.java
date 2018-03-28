@@ -16,7 +16,7 @@ import com.example.salvadorelizarraras.bakingapp3.Recipe.Recipe;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements android.support.v4.app.FragmentManager.OnBackStackChangedListener {
 
     private static final String TAG = "MainActivity";
     public FragmentHome fragmentHome;
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
         Log.d(TAG, "onCreate: ");
         frags = new ArrayList<>();
 
@@ -36,6 +37,12 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    public void shouldDisplayHomeUp(){
+        //Enable Up button only  if there are entries in the back stack
+        boolean canback = getSupportFragmentManager().getBackStackEntryCount()>0;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(canback);
+    }
+
     @Override
     public void onBackPressed() {
         boolean isThere = false;
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity  {
             for (Fragment fragment1 : frags){
 
                 if(fragment1 == fragment){
-                    isThere =true;
+                    isThere = true;
                 }
 
             }
@@ -112,8 +119,18 @@ public class MainActivity extends AppCompatActivity  {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
     }
-
-
     //#endregion
 
-}
+    @Override
+    public void onBackStackChanged() {
+        shouldDisplayHomeUp();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Log.d(TAG, "onSupportNavigateUp: ");
+    onBackPressed();
+    return true;
+    }
+
+    }

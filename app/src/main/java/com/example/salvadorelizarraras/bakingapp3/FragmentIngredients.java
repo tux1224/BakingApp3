@@ -39,7 +39,7 @@ public class FragmentIngredients extends Fragment implements AdapterIngredients.
 
     {
         View view = inflater.inflate(R.layout.ingredients_fragment, container, false);
-
+        ((MainActivity)getActivity()).shouldDisplayHomeUp();
             ButterKnife.bind(this, view);
             Bundle bundle = getArguments();
             mData = bundle.getParcelableArrayList("ingredients");

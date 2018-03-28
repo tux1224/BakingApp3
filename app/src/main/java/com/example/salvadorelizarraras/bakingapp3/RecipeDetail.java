@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
         ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         mRecipe = bundle.getParcelable("recipe");
-
+         ((MainActivity)getActivity()).shouldDisplayHomeUp();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecicler.setLayoutManager(layoutManager);
         mAdapter = new AdapterSteps();
@@ -112,7 +113,11 @@ public class RecipeDetail extends Fragment implements AdapterSteps.Listeners {
         }
     }
 
-
+    public void shouldDisplayHomeUp(){
+        //Enable Up button only  if there are entries in the back stack
+        boolean canback = getFragmentManager().getBackStackEntryCount()>0;
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(canback);
+    }
 
     //#regionlifecycle
     @Override

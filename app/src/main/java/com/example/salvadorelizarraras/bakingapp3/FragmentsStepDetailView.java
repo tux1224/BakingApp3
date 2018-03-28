@@ -38,7 +38,9 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -91,7 +93,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             mPreviousPosition = savedInstanceState.getInt("sesion",0);
             Log.d(TAG, "onCreateView: "+mPreviousPosition);
         }
-
+        ((MainActivity)getActivity()).shouldDisplayHomeUp();
         View view = inflater.inflate(R.layout.fragment_recipe_detail,container,false);
         mPlayerView = (SimpleExoPlayerView) view.findViewById(R.id.player_view);
         left = (ImageView) view.findViewById(R.id.left);
@@ -116,7 +118,15 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             if(mediaUri.toString().isEmpty()) {
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                                 R.drawable.novideo);
+                        if (!mStep.getThumbnailURL().isEmpty()){
+                            try {
+                                bitmap = Picasso.get().load("http://i.imgur.com/DvpvklR.png").get();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         mPlayerView.setDefaultArtwork(bitmap);
+
                         mPlayerView.setUseController(false);
 
             }else {
