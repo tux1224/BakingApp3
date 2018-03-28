@@ -120,7 +120,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
                                 R.drawable.novideo);
                         if (!mStep.getThumbnailURL().isEmpty()){
                             try {
-                                bitmap = Picasso.get().load("http://i.imgur.com/DvpvklR.png").get();
+                                bitmap = Picasso.get().load(mStep.getThumbnailURL()).get();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
