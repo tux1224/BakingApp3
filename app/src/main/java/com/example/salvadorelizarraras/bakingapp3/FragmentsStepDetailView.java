@@ -118,7 +118,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             if(mediaUri.toString().isEmpty()) {
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                                 R.drawable.novideo);
-                        if (!mStep.getThumbnailURL().isEmpty()){
+                        if (!mStep.getThumbnailURL().isEmpty() || mStep.getThumbnailURL() != null){
                             try {
                                 bitmap = Picasso.get().load(mStep.getThumbnailURL()).get();
                             } catch (IOException e) {

@@ -73,7 +73,7 @@ public class AdapterHome extends RecyclerView.Adapter<AdapterHome.MyViewHolder> 
         Bitmap bitmap = null;
         try {
 
-            bitmap = (mData.get(position).getImage().isEmpty()) ? drawableToBitmap(image.getDrawable(position)):
+            bitmap = (mData.get(position).getImage().isEmpty() || mData.get(position).getImage() == null) ? drawableToBitmap(image.getDrawable(position)):
                     Picasso.get().load(mData.get(position).getImage().toString()).get();
         }catch(IOException e){
             e.getStackTrace();
