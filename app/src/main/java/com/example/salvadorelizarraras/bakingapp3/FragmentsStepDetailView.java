@@ -62,6 +62,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
     private int mPosition;
     private Uri uriVieo;
     private TextView mDescrition;
+    private boolean isPlaying = true;
 
 
     @Override
@@ -74,6 +75,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             mPosition = getArguments().getInt("position");
             mStep = mSteps.get(mPosition);
             uriVieo = Uri.parse(mStep.getVideoURL());
+            isPlaying = getArguments().getBoolean("playstate",true);
         }else{
             Log.d(TAG, "onCreate: " + savedInstanceState.getInt("sesion", 0));
             mSteps = savedInstanceState.getParcelableArrayList("steps");
@@ -118,8 +120,10 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             if(mediaUri.toString().isEmpty()) {
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                                 R.drawable.novideo);
-                        if (!mStep.getThumbnailURL().isEmpty() || mStep.getThumbnailURL() != null){
+                        String imageUrl = (mStep.getThumbnailURL().trim() == null) ? "" : mStep.getThumbnailURL().trim();
+                        if (!imageUrl.isEmpty() ){
                             try {
+                                Log.d(TAG, "initializePlayer:"+mStep.getThumbnailURL());
                                 bitmap = Picasso.get().load(mStep.getThumbnailURL()).get();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -139,7 +143,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
                 MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                         getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
                 mExoPlayer.prepare(mediaSource);
-                mExoPlayer.setPlayWhenReady(true);
+                mExoPlayer.setPlayWhenReady(isPlaying);
             }
 
         }
@@ -210,6 +214,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
             Log.d(TAG, "onSaveInstanceState: " + mExoPlayer.getCurrentPosition());
             outState.putInt("sesion", (int) mExoPlayer.getCurrentPosition());
             mPreviousPosition = (int) mExoPlayer.getCurrentPosition();
+            outState.putBoolean("playstate", mExoPlayer.getPlayWhenReady());
         }
     }
 
@@ -227,6 +232,7 @@ public class FragmentsStepDetailView extends Fragment implements ExoPlayer.Event
         if (savedInstanceState != null) {
             Log.d(TAG, "onActivityCreated: ");
             mPreviousPosition = savedInstanceState.getInt("sesion", 0);
+            isPlaying = savedInstanceState.getBoolean("playstate",true);
         }
     }
 
